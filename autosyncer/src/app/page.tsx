@@ -1,4 +1,5 @@
 import { ContainerScroll } from "@/components/global/container-scroll-animation";
+import { InfiniteMovingCards } from "@/components/global/infinite-moving-cards";
 import Navbar from "@/components/global/navbar";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
@@ -22,7 +23,7 @@ export default function Home() {
                   </span>
                 </Button>
                 <h1 className="text-5xl md:text-8xl  bg-clip-text text-transparent bg-gradient-to-b from-white to-neutral-600 font-sans font-bold">
-                  Automate Your Work With Fuzzie
+                  Automate Your Work With AutoSyncer
                 </h1>
               </div>
             }
