@@ -8,9 +8,9 @@ export async function POST(req: Request) {
         const { id, email_addresses, first_name, image_url } = body?.data
     
         const email = email_addresses[0]?.email_address
-        console.log('✅', body)
+        console.log('✅ Received body:', body)
     
-        await db.user.upsert({
+        const result = await db.user.upsert({
           where: { clerkId: id },
           update: {
             email,
@@ -24,12 +24,12 @@ export async function POST(req: Request) {
             profileImage: image_url || '',
           },
         })
+        console.log('✅ Database operation result:', result)
         return new NextResponse('User updated in database successfully', {
           status: 200,
         })
-      } catch (error) {
-        console.error('Error updating database:', error)
+    } catch (error) {
+        console.error('❌ Error updating database:', error)
         return new NextResponse('Error updating user in database', { status: 500 })
-      }
-      
+    }
 }
