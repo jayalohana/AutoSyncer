@@ -11,6 +11,21 @@ const Settings = async (props: Props) => {
   if (!authUser) return null;
 
   const user = await db.user.findUnique({ where: { clerkId: authUser.id } });
+  const userExists = await db.user.findUnique({
+    where: { clerkId: authUser.id },
+  });
+
+  if (!userExists) {
+    // Handle the case where the user does not exist
+    console.error("No user found with this clerkId:", authUser.id);
+    return;
+  }
+
+  const response = await db.user.update({
+    where: { clerkId: authUser.id },
+    data: { profileImage: "" },
+  });
+
   const removeProfileImage = async () => {
     "use server";
     const response = await db.user.update({

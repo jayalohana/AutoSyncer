@@ -1,51 +1,63 @@
 "use client";
 
+import React, { use, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import React, { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { EditUserProfileSchema } from "@/lib/types";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormControl,
   FormMessage,
 } from "../ui/form";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Loader2 } from "lucide-react";
 
-type Props = {};
+type Props = {
+  user: any;
+  onUpdate?: any;
+};
 
-const ProfileForm = (props: Props) => {
+const ProfileForm = ({ user, onUpdate }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const form = useForm<z.infer<typeof EditUserProfileSchema>>({
     mode: "onChange",
     resolver: zodResolver(EditUserProfileSchema),
     defaultValues: {
-      name: "",
-      email: "",
+      name: user.name,
+      email: user.email,
     },
   });
 
-  const handleSubmit = async (data: any) => {
+  const handleSubmit = async (
+    values: z.infer<typeof EditUserProfileSchema>
+  ) => {
     setIsLoading(true);
-    // Perform form submission logic here
+    await onUpdate(values.name);
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    form.reset({ name: user.name, email: user.email });
+  }, [user]);
+
   return (
-    <Form {...form} onSubmit={form.handleSubmit(handleSubmit)}>
-      <div className="flex flex-col gap-6">
+    <Form {...form}>
+      <form
+        className="flex flex-col gap-6"
+        onSubmit={form.handleSubmit(handleSubmit)}
+      >
         <FormField
           disabled={isLoading}
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-lg">Full name</FormLabel>
+              <FormLabel className="text-lg">User full name</FormLabel>
               <FormControl>
                 <Input {...field} placeholder="Name" />
               </FormControl>
@@ -84,7 +96,7 @@ const ProfileForm = (props: Props) => {
             "Save User Settings"
           )}
         </Button>
-      </div>
+      </form>
     </Form>
   );
 };
